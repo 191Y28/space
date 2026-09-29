@@ -1,122 +1,294 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-    />
-    <title>Ultraviolet | Sophisticated Web Proxy</title>
-    <meta
-      name="description"
-      content="Ultraviolet is a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers. Unblock sites today!"
-    />
-    <meta
-      name="keywords"
-      content="proxy, web proxy, ultraviolet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, un block chromebook, online proxy, proxy server, proxysite, proxy youtube, bypass securly, bypass iboss, bypass lightspeed filter, holy unblocker, chromebooks, titanium network, unblock youtube, youtube proxy, unblocked youtube, youtube unblocked"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="#434c5e"
-    />
-    <meta name="googlebot" content="index, follow, snippet" />
-    <link rel="shortcut icon" content="favicon.ico" />
-    <link rel="stylesheet" href="index.css" />
-    <script src="baremux/index.js" defer></script>
-    <script src="epoxy/index.js" defer></script>
-    <script src="uv/uv.bundle.js" defer></script>
-    <script src="uv/uv.config.js" defer></script>
-    <script src="register-sw.js" defer></script>
-    <script src="search.js" defer></script>
-    <script src="index.js" defer></script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is Ultraviolet (Web Proxy)?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Workspace</title>
+    
+    <!-- Core Ulraiolet & Service Worker Scripts -->
+    <script src="/uv/uv.bundle.js" defer></script>
+    <script src="/uv/uv.config.js" defer></script>
+    <script src="/register-sw.js" defer></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f111a;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Browser Control Bar Layout */
+        .browser-navbar {
+            display: flex;
+            align-items: center;
+            background-color: #1a1d29;
+            padding: 8px 16px;
+            gap: 12px;
+            border-bottom: 1px solid #2a2f45;
+            height: 50px;
+            z-index: 10;
+        }
+
+        /* Navigation Buttons (Back, Forward, Refresh) */
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #a0a5c0;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #2e344d;
+            color: #00fff2;
+        }
+
+        /* The Main Address Bar Box */
+        .address-bar-container {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #address-bar {
+            width: 100%;
+            height: 34px;
+            background-color: #0b0c10;
+            border: 1px solid #3b4261;
+            border-radius: 20px;
+            padding: 0 16px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #address-bar:focus {
+            border-color: #00fff2;
+            box-shadow: 0 0 8px rgba(0, 255, 242, 0.3);
+        }
+
+        /* Action Buttons (Go, Fullscreen) */
+        .action-btn {
+            background-color: #00fff2;
+            border: none;
+            color: #0f111a;
+            padding: 0 16px;
+            height: 34px;
+            border-radius: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #00cccc;
+            transform: scale(1.02);
+        }
+
+        .fullscreen-btn {
+            background-color: #2e344d;
+            color: #ffffff;
+        }
+
+        .fullscreen-btn:hover {
+            background-color: #3e4668;
+            color: #00fff2;
+        }
+
+        /* The Main Content Screen Viewer Container */
+        .viewport-container {
+            flex-grow: 1;
+            width: 100%;
+            position: relative;
+            background: #0f111a;
+        }
+
+        #browser-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #ffffff; /* Sets standard white backdrop inside games/sites */
+        }
+
+        /* Welcome Screen Placeholder overlay */
+        .welcome-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #0f111a;
+            z-index: 5;
+            gap: 16px;
+        }
+
+        .welcome-screen h1 {
+            font-size: 28px;
+            color: #00fff2;
+            text-shadow: 0 0 10px rgba(0, 255, 242, 0.2);
+        }
+
+        .welcome-screen p {
+            color: #a0a5c0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Browser Navigation Bar Elements -->
+    <div class="browser-navbar">
+        <div class="nav-buttons">
+            <button class="nav-btn" id="back-btn" title="Back">⟵</button>
+            <button class="nav-btn" id="forward-btn" title="Forward">⟶</button>
+            <button class="nav-btn" id="refresh-btn" title="Refresh">↻</button>
+        </div>
+
+        <div class="address-bar-container">
+            <input type="text" id="address-bar" placeholder="Enter web address or search terms..." autofocus>
+        </div>
+
+        <button class="action-btn" id="go-btn">Go</button>
+        <button class="action-btn fullscreen-btn" id="fullscreen-btn" title="Toggle Fullscreen">⛶</button>
+    </div>
+
+    <!-- Live App Viewport Target -->
+    <div class="viewport-container" id="viewport">
+        <div class="welcome-screen" id="welcome-layer">
+            <h1>Virtual Workspace</h1>
+            <p>Type a URL or search phrase in the bar above to launch.</p>
+        </div>
+        <iframe id="browser-frame" style="display: none;"></iframe>
+    </div>
+
+    <script>
+        const addressBar = document.getElementById('address-bar');
+        const goBtn = document.getElementById('go-btn');
+        const backBtn = document.getElementById('back-btn');
+        const forwardBtn = document.getElementById('forward-btn');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const browserFrame = document.getElementById('browser-frame');
+        const welcomeLayer = document.getElementById('welcome-layer');
+        const viewport = document.getElementById('viewport');
+
+        // 1. Process URL/Search input and launch through Ultraviolet Proxy
+        function launchSession() {
+            let input = addressBar.value.trim();
+            if (!input) return;
+
+            let targetUrl = '';
+            // Basic URL check regex pattern
+            const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?\$/i;
+
+            if (urlPattern.test(input)) {
+                // If it looks like a URL but missing protocol, fix it
+                if (!/^https?:\/\//i.test(input)) {
+                    input = 'https://' + input;
+                }
+                targetUrl = input;
+            } else {
+                // If it's a generic word string, fallback to DuckDuckGo search engine
+                targetUrl = 'https://duckduckgo.com' + encodeURIComponent(input);
             }
-          },
-          {
-            "@type": "Question",
-            "name": "How do I unblock sites using Ultraviolet?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
+
+            // Hide welcoming graphics layer, display active iframe
+            welcomeLayer.style.display = 'none';
+            browserFrame.style.display = 'block';
+
+            // Verify configuration availability and generate scrambled Ultraviolet pathway
+            if (typeof __uv\$config !== 'undefined') {
+                browserFrame.src = __uv\(config.prefix + __uv\)config.encodeUrl(targetUrl);
+            } else {
+                console.error("Ultraviolet configuration script not detected. Verify uv.config.js path handles.");
+                alert("Proxy engine initializing. Try again in a few seconds.");
             }
-          },
-          {
-            "@type": "Question",
-            "name": "What if Ultraviolet is blocked or not working?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Join the Titanium Network Discord at discord.gg/unblock!"
+        }
+
+        // Action button hook attachments
+        goBtn.addEventListener('click', launchSession);
+        addressBar.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') launchSession();
+        });
+
+        // 2. Hardware Navigation Hooking
+        backBtn.addEventListener('click', () => {
+            try {
+                browserFrame.contentWindow.history.back();
+            } catch (err) { console.log("Navigation bounds intercepted safely."); }
+        });
+
+        forwardBtn.addEventListener('click', () => {
+            try {
+                browserFrame.contentWindow.history.forward();
+            } catch (err) { console.log("Navigation bounds intercepted safely."); }
+        });
+
+        refreshBtn.addEventListener('click', () => {
+            try {
+                browserFrame.contentWindow.location.reload();
+            } catch (err) { console.log("Refresh request handled."); }
+        });
+
+        // 3. Fullscreen Screen Scaling Controller
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                viewport.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
             }
-          }
-        ]
-      }
+        });
+
+        // 4. Backward Decoding Synchronization Loop for the Bar
+        browserFrame.addEventListener('load', () => {
+            try {
+                const currentFramePath = browserFrame.contentWindow.location.pathname;
+                if (currentFramePath.includes(__uv\$config.prefix)) {
+                    const encodedPart = currentFramePath.split(__uv\$config.prefix)[1];
+                    if (encodedPart && typeof __uv\$config.decodeUrl === 'function') {
+                        const decodedUrl = __uv\$config.decodeUrl(encodedPart);
+                        // Update layout address input box silently to match user navigation path
+                        if (!decodedUrl.includes('duckduckgo.com')) {
+                            addressBar.value = decodedUrl;
+                        }
+                    }
+                }
+            } catch (e) {
+                // Ignore cross-origin reporting checks when frame touches native pages
+            }
+        });
     </script>
-  </head>
-
-  <body>
-    <div
-      title="Ultraviolet Logo"
-      class="flex-center logo-wrapper header-center"
-    >
-      <img class="logo" src="uv.png" alt="Ultraviolet" />
-      <h1>Ultraviolet | TN</h1>
-    </div>
-    <div class="flex-center desc left-margin">
-      <p>
-        Ultraviolet is highly sophisticated proxy used for evading internet
-        censorship.
-      </p>
-    </div>
-
-    <form id="uv-form" class="flex-center">
-      <input
-        id="uv-search-engine"
-        value="https://www.google.com/search?q=%s"
-        type="hidden"
-      />
-      <input id="uv-address" type="text" placeholder="Search the web freely" />
-    </form>
-    <div class="desc left-margin">
-      <p id="uv-error"></p>
-      <pre id="uv-error-code"></pre>
-    </div>
-    <footer>
-      <div>
-        <a
-          title="The TitaniumNetwork GitHub organization"
-          href="https://github.com/titaniumnetwork-dev"
-          >TitaniumNetwork</a
-        >
-        <a title="The TitaniumNetwork Discord" href="https://discord.gg/unblock"
-          >Discord</a
-        >
-        <a
-          title="The TompHTTP GitHub organization"
-          href="https://github.com/tomphttp"
-          >TompHTTP</a
-        >
-        <a
-          title="The official deployment repository for Ultraviolet"
-          href="https://github.com/titaniumnetwork-dev/Ultraviolet-App"
-          >GitHub</a
-        >
-        <a title="License information" href="credits.html">Credits</a>
-      </div>
-      <div>
-        <span>Ultraviolet &copy; TN 2023</span>
-      </div>
-    </footer>
-    <iframe style="display: none;" id="uv-frame"></iframe>
-  </body>
+</body>
 </html>
